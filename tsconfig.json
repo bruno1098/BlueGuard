@@ -1,5 +1,5 @@
 {
-  "extends": "/Users/brunoantunes/Desktop/Arquivos/BlueGuard/node_modules/expo/tsconfig.base.json",
+  "extends": "./node_modules/expo/tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react",
     "strict": true,
