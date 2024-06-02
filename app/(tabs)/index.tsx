@@ -3,6 +3,10 @@ import { View, StyleSheet, Image, ScrollView, Button } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { LogBox } from 'react-native';
+
+// Ignorar todos os warnings
+LogBox.ignoreAllLogs();
 
 export default function Index() {
   return (

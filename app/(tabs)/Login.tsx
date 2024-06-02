@@ -8,6 +8,15 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { Toast, NativeBaseProvider } from 'native-base';
 import Animated, { Easing, useSharedValue, useAnimatedStyle, withTiming, withRepeat, runOnJS } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+interface Usuario {
+  nome: string;
+  idade: string;
+  email: string;
+  senha: string;
+}
 
 const TelaLogin: React.FC = () => {
   const router = useRouter();
@@ -60,6 +69,14 @@ const TelaLogin: React.FC = () => {
     });
   };
 
+  const armazenarUsuario = async (usuario: Usuario) => {
+    try {
+      await AsyncStorage.setItem('usuario', JSON.stringify(usuario));
+    } catch (error) {
+      console.error("Erro ao armazenar os dados do usuário:", error);
+    }
+  };
+
   const lidarComLogin = async () => {
     if (estaVazio(loginEmail) || estaVazio(loginSenha)) {
       setLoginStatus('error');
@@ -81,16 +98,18 @@ const TelaLogin: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      const dados = await resposta.json();
-      const usuario = Object.values(dados).find((user: any) => user.senha === loginSenha);
+      const dados: { [key: string]: Usuario } = await resposta.json(); 
+      const usuario = Object.values(dados).find((user: Usuario) => user.email === loginEmail && user.senha === loginSenha);
 
       if (!usuario) throw new Error('Email ou senha incorretos.');
 
       setLoginStatus('success');
       mostrarToast('Login bem-sucedido!', 'success');
 
-      console.log('Login bem-sucedido! Redirecionando para a tela Home');
-      router.push('/(logtabs)/Home');
+     
+      armazenarUsuario(usuario);
+
+      router.push('/(logtabs)/Mapa');
     } catch (erro) {
       console.error("Erro ao tentar fazer login:", erro);
       setLoginStatus('error');
@@ -265,7 +284,6 @@ const TelaLogin: React.FC = () => {
     </NativeBaseProvider>
   );
 };
-
 
 const estilos = StyleSheet.create({
   container: {

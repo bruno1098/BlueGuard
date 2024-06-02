@@ -15,29 +15,28 @@ export default function LogTabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="Mapa"
         options={{
-          title: 'Home',
+          title: 'Mapa',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon 
               library="MaterialCommunityIcons"
-              name={focused ? 'home-lock-open' : 'home-lock'} 
-              color={color} 
+              name={focused ? 'map-marker-radius' : 'google-maps'} 
+              color={color}
               focused={focused} 
-
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="Login"
+        name="Comunidade"
         options={{
-          title: 'Login',
+          title: 'Comunidade',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon 
               library="MaterialCommunityIcons"
-              name={focused ? 'account-circle' : 'account-circle-outline'} 
-              color={color} 
+              name={focused ? 'human-queue' : 'account-group-outline'} 
+              color={color}
               focused={focused} 
             />
           ),
