@@ -1,13 +1,11 @@
-
 <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:6a11cb,100:2575fc&height=120&section=header"/>
-
 <h1 align="center">
   <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=900&height=50&duration=5800&pause=1000&color=37435D&stroke=008000&lines=Ol%C3%A1!+👋;+Bem-vindo+ao+BlueGuard!" />
 </h1>
 
 <h1 align="center" > 🌊 BlueGuard 🌊 </h1>
  
-BlueGuard é um aplicativo desenvolvido em **React Native** utilizando **Expo**, focado em mapear locais com informações ambientais, permitindo que os usuários registrem e visualizem dados sobre qualidade da água, temperatura e outros aspectos relevantes. Os usuários podem ver, adicionar e compartilhar essas informações com a comunidade, promovendo a conscientização e a proteção do meio ambiente.
+<p style="text-align: justify;"> <strong>BlueGuard</strong> é um aplicativo inovador desenvolvido em <strong>React Native</strong> utilizando <strong>Expo</strong>, desenvolvido para mapear locais com informações ambientais de maneira eficiente. O aplicativo permite que os usuários registrem e visualizem dados detalhados sobre a qualidade da água, temperatura e outros aspectos ambientais relevantes. Além disso, os usuários podem adicionar novas informações e compartilhar esses dados com a comunidade, incentivando a conscientização e a proteção do meio ambiente. Com BlueGuard, torna-se mais fácil monitorar e preservar nossos recursos naturais.</p>
 
 <h2 align="center">Tecnologias Utilizadas</h2>
 <p align="center">
