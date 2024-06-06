@@ -198,7 +198,7 @@ const Perfil: React.FC = () => {
               keyboardType="numeric"
             />
             <TouchableOpacity style={estilos.forgotPasswordButton} onPress={() => setModalVisible(true)}>
-              <ThemedText style={estilos.forgotPasswordText}>Esqueci a senha</ThemedText>
+              <ThemedText style={estilos.forgotPasswordText}>Atualizar senha</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity style={estilos.logoutButton} onPress={() => setLogoutModalVisible(true)}>
               <ThemedText style={estilos.logoutText}>Logoff</ThemedText>

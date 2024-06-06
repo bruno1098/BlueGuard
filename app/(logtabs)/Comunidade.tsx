@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Image, Dimensions, RefreshControl } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, ScrollView, Image, Dimensions, RefreshControl, Text, useColorScheme } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import axios from 'axios';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, interpolate, Easing } from 'react-native-reanimated';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Usuario {
   nome: string;
@@ -23,16 +26,21 @@ interface Local {
   observacoes: string;
   imagemLocal: string;
   cadastradoPor: string;
+  publicado: boolean;
   timestamp: string;
+  editadoEm?: string;
 }
 
 const Comunidade: React.FC = () => {
   const [locais, setLocais] = useState<Local[]>([]);
   const [usuarios, setUsuarios] = useState<{ [email: string]: Usuario }>({});
   const [refreshing, setRefreshing] = useState<boolean>(false);
-
+  const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
+
+  const translateY = useSharedValue(0);
+  const titleScale = useSharedValue(1);
 
   const fetchLocais = async () => {
     try {
@@ -42,7 +50,6 @@ const Comunidade: React.FC = () => {
         id: key,
         ...data[key],
       }));
-      // Ordenar os locais pela data mais recente primeiro
       const sortedLocais = locaisArray.filter(local => local.publicado).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
       setLocais(sortedLocais);
     } catch (error) {
@@ -65,6 +72,13 @@ const Comunidade: React.FC = () => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchLocais();
+      fetchUsuarios();
+    }, [])
+  );
+
   useEffect(() => {
     fetchLocais();
     fetchUsuarios();
@@ -77,9 +91,28 @@ const Comunidade: React.FC = () => {
     setRefreshing(false);
   };
 
-  const formatTimestamp = (timestamp: string) => {
+  const titleAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateY: translateY.value },
+        { scale: titleScale.value },
+      ],
+    };
+  });
+
+  const handleScroll = (event: { nativeEvent: { contentOffset: { y: any; }; }; }) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    translateY.value = withTiming(-Math.min(offsetY, 50), { duration: 500, easing: Easing.out(Easing.exp) });
+    titleScale.value = withTiming(offsetY > 50 ? 0.8 : 1, { duration: 500, easing: Easing.out(Easing.exp) });
+  };
+
+  const formatTimestamp = (timestamp: string, editadoEm?: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleString();
+    const formattedDate = date.toLocaleString();
+    if (editadoEm) {
+      return `${formattedDate} (editado)`;
+    }
+    return formattedDate;
   };
 
   const isRemoteUrl = (url: string) => {
@@ -87,36 +120,41 @@ const Comunidade: React.FC = () => {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {locais.map((local) => (
-          <View key={local.id} style={[styles.card, { backgroundColor }]}>
-            <View style={styles.header}>
-              {usuarios[local.cadastradoPor]?.fotoPerfil && isRemoteUrl(usuarios[local.cadastradoPor]?.fotoPerfil as string) ? (
-                <Image
-                  source={{ uri: usuarios[local.cadastradoPor]?.fotoPerfil as string }}
-                  style={styles.avatar}
-                />
-              ) : (
-                <View style={styles.avatarPlaceholder} />
-              )}
-              <View>
-                <ThemedText style={[styles.nome, { color: textColor }]}>{usuarios[local.cadastradoPor]?.nome || local.cadastradoPor}</ThemedText>
-                <ThemedText style={[styles.timestamp, { color: textColor }]}>{formatTimestamp(local.timestamp)}</ThemedText>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemedView style={styles.container}>
+        <Animated.View style={[styles.titleContainer, titleAnimatedStyle]}>
+          <Text style={[styles.title, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Comunidade 👥</Text>
+        </Animated.View>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContent}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          {locais.map((local) => (
+            <View key={local.id} style={[styles.card, { backgroundColor }]}>
+              <View style={styles.header}>
+                {usuarios[local.cadastradoPor]?.fotoPerfil && isRemoteUrl(usuarios[local.cadastradoPor]?.fotoPerfil as string) ? (
+                  <Image
+                    source={{ uri: usuarios[local.cadastradoPor]?.fotoPerfil as string }}
+                    style={styles.avatar}
+                  />
+                ) : (
+                  <View style={styles.avatarPlaceholder} />
+                )}
+                <View>
+                  <ThemedText style={[styles.nome, { color: textColor }]}>{usuarios[local.cadastradoPor]?.nome || local.cadastradoPor}</ThemedText>
+                  <ThemedText style={[styles.timestamp, { color: textColor }]}>{formatTimestamp(local.timestamp, local.editadoEm)}</ThemedText>
+                </View>
               </View>
+              <Image source={{ uri: local.imagemLocal }} style={styles.imagem} />
+              <ThemedText style={[styles.local, { color: textColor }]}>{local.local}</ThemedText>
+              <ThemedText style={[styles.observacoes, { color: textColor }]}>{local.observacoes}</ThemedText>
             </View>
-            <Image source={{ uri: local.imagemLocal }} style={styles.imagem} />
-            <ThemedText style={[styles.local, { color: textColor }]}>{local.local}</ThemedText>
-            <ThemedText style={[styles.observacoes, { color: textColor }]}>{local.observacoes}</ThemedText>
-          </View>
-        ))}
-      </ScrollView>
-    </ThemedView>
+          ))}
+        </ScrollView>
+      </ThemedView>
+    </GestureHandlerRootView>
   );
 };
 
@@ -125,7 +163,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  titleContainer: {
+    position: 'absolute',
+    top: 40,
+    left: 10,
+    zIndex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
   scrollViewContent: {
+    paddingTop: 100,  // espaço para o título
     paddingBottom: 16,
   },
   card: {

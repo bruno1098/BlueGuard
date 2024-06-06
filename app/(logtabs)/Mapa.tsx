@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Dimensions, TextInput, FlatList, TouchableOpacity, Modal, ScrollView, Button, Animated, Keyboard, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TextInput, FlatList, TouchableOpacity, Modal, ScrollView, Button, Animated, Keyboard, useColorScheme, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -18,6 +18,7 @@ interface Location {
   potavel: boolean;
   observacoes: string;
   cadastradoPor: string;
+  publicado: boolean; // Certifique-se de que esta propriedade está presente
 }
 
 const Mapa: React.FC = () => {
@@ -144,6 +145,48 @@ const Mapa: React.FC = () => {
     closeMenu();
     router.push('../Perfil'); 
   };
+
+  const handleDelete = () => {
+    if (selectedLocation) {
+      Alert.alert(
+        "Confirmação de Exclusão",
+        "Você tem certeza que deseja excluir este local?",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel"
+          },
+          {
+            text: "Excluir",
+            onPress: () => {
+              axios.delete(`https://experienceia-default-rtdb.firebaseio.com/locais/${selectedLocation.id}.json`)
+                .then(() => {
+                  fetchLocations();
+                  handleCloseModal();
+                })
+                .catch(error => {
+                  console.error("Erro ao excluir o local: ", error);
+                });
+            },
+            style: "destructive"
+          }
+        ]
+      );
+    }
+  };
+
+  const handleEdit = () => {
+    if (selectedLocation) {
+      const locationData = JSON.stringify(selectedLocation);
+      router.push({
+        pathname: '../EditarLocal',
+        params: { location: locationData },
+      });
+      handleCloseModal();
+    }
+  };
+  
+
   return (
     <Provider>
       <View style={styles.container}>
@@ -159,7 +202,6 @@ const Mapa: React.FC = () => {
           >
             <Menu.Item onPress={navigateToPerfil} title="Perfil" />
             <Menu.Item onPress={navigateToCadastro} title="Cadastro" />
-            
           </Menu>
         </View>
 
@@ -234,6 +276,12 @@ const Mapa: React.FC = () => {
                     <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Potável: {selectedLocation.potavel ? 'Sim' : 'Não'}</Text>
                     <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Observações: {selectedLocation.observacoes}</Text>
                     <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black', fontSize: 12 }]}>Cadastrado por: {selectedLocation.cadastradoPor || 'Sistema'}</Text>
+                    {selectedLocation.cadastradoPor === user.nome && (
+                      <View style={styles.buttonContainer}>
+                        <Button title="Editar" onPress={handleEdit} />
+                        <Button title="Excluir" onPress={handleDelete} color="red" />
+                      </View>
+                    )}
                     <Button title="Fechar" onPress={handleCloseModal} />
                   </>
                 )}
@@ -330,6 +378,12 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     padding: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 20,
   },
 });
 
