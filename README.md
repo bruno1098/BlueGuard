@@ -164,3 +164,320 @@ O projeto utiliza a estrutura de rotas do **Expo Router** e a configuração de 
 
 - **Armazenamento Seguro de Dados**: Utiliza **AsyncStorage** para armazenar dados de usuário de forma segura.
 - **Atualização de Senha**: A funcionalidade de alteração de senha oferece uma camada adicional de segurança para os usuários.
+
+
+# API
+<h1 align="center">
+  <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=900&height=50&duration=5800&pause=1000&color=37435D&stroke=008000&lines=📚+Documentação+da+API+BlueGuard"/>
+</h1>
+ <h2 align="center">🌐 Endpoints da API 🌐</h2>
+
+### <h3 align="center">1. Obter Dados dos Usuários</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/Usuarios.json`
+
+**Método:** `GET`
+
+**Descrição:** Obtém a lista de todos os usuários cadastrados.
+
+**Exemplo de Requisição:**
+
+```javascript
+axios.get('https://experienceia-default-rtdb.firebaseio.com/Usuarios.json')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao obter dados dos usuários:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "-NzjVw54NHHJozNTx1_s": {
+    "email": "rafael@gmail.com",
+    "fotoPerfil": "https://media.linkedin.com/dms/image/D4D03AQHg5YL4Gtq/profile-displayphoto-shrink_400_400/0/16784263797?e=1723075200&v=beta&t=HX3Kj1h6F3n7mL_q5wE8Bf3",
+    "idade": "19 anos",
+    "nome": "Rafael Lino",
+    "senha": "rafael"
+  },
+  "-NzjY4HHnmT7v_kTHu3N": {
+    "email": "rafael@gmail.com",
+    "idade": "19",
+    "nome": "Rafael",
+    "senha": "rafael123"
+  }
+}
+```
+
+### <h3 align="center">2. Adicionar Novo Usuário</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/Usuarios.json`
+
+**Método:** `POST`
+
+**Descrição:** Adiciona um novo usuário à base de dados.
+
+**Exemplo de Requisição:**
+
+```javascript
+const novoUsuario = {
+  email: "novo@usuario.com",
+  fotoPerfil: "https://exemplo.com/foto.jpg",
+  idade: "25",
+  nome: "Novo Usuário",
+  senha: "senha123"
+};
+
+axios.post('https://experienceia-default-rtdb.firebaseio.com/Usuarios.json', novoUsuario)
+  .then(response => {
+    console.log('Usuário adicionado com ID:', response.data.name);
+  })
+  .catch(error => {
+    console.error('Erro ao adicionar usuário:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "name": "-NzjZ7bHnmT7v_kTHu3N"
+}
+```
+
+### <h3 align="center">3. Atualizar Foto de Perfil do Usuário</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/Usuarios/{userKey}.json`
+
+**Método:** `PATCH`
+
+**Descrição:** Atualiza a foto de perfil de um usuário existente.
+
+**Exemplo de Requisição:**
+
+```javascript
+const userKey = "-NzjVw54NHHJozNTx1_s"; // Chave do usuário
+const novaFoto = { fotoPerfil: "https://nova-foto.com/foto.jpg" };
+
+axios.patch(`https://experienceia-default-rtdb.firebaseio.com/Usuarios/${userKey}.json`, novaFoto)
+  .then(response => {
+    console.log('Foto de perfil atualizada:', response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao atualizar foto de perfil:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "fotoPerfil": "https://nova-foto.com/foto.jpg"
+}
+```
+
+### <h3 align="center">4. Atualizar Senha do Usuário</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/Usuarios/{userKey}.json`
+
+**Método:** `PATCH`
+
+**Descrição:** Atualiza a senha de um usuário existente.
+
+**Exemplo de Requisição:**
+
+```javascript
+const userKey = "-NzjVw54NHHJozNTx1_s"; // Chave do usuário
+const novaSenha = { senha: "novaSenha123" };
+
+axios.patch(`https://experienceia-default-rtdb.firebaseio.com/Usuarios/${userKey}.json`, novaSenha)
+  .then(response => {
+    console.log('Senha atualizada:', response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao atualizar senha:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "senha": "novaSenha123"
+}
+```
+
+### <h3 align="center">5. Obter Locais</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/locais.json`
+
+**Método:** `GET`
+
+**Descrição:** Obtém a lista de todos os locais cadastrados.
+
+**Exemplo de Requisição:**
+
+```javascript
+axios.get('https://experienceia-default-rtdb.firebaseio.com/locais.json')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error('Erro ao obter dados dos locais:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "-NzKeT6XFoDhTDHxpb9-": {
+    "cadastradoPor": "Bruno",
+    "editadoEm": "2024-06-07T01:29:47.897Z",
+    "imagemLocal": "https://www.costacruz.com/content/dam/costa/costa-article-images/argentine-beaches/spiagge-argentina.jpg.image.648.487.high.jpg",
+    "latitude": -35.10218936043119,
+    "local": "Argentina",
+    "longitude": -54.114462706976774,
+    "nivel_de_sujeira": "Baixa",
+    "observacoes": "Água limpa",
+    "ph_da_agua": 3,
+    "potavel": true,
+    "publicado": true,
+    "temperatura": 20,
+    "timestamp": 1717276631214
+  }
+}
+```
+
+### <h3 align="center">6. Adicionar Novo Local</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/locais.json`
+
+**Método:** `POST`
+
+**Descrição:** Adiciona um novo local à base de dados.
+
+**Exemplo de Requisição:**
+
+```javascript
+const novoLocal = {
+  local: "Nova Praia",
+  latitude: -23.533773,
+  longitude: -46.625290,
+  nivel_de_sujeira: "Moderada",
+  ph_da_agua: 7.2,
+  temperatura: 22,
+  potavel: false,
+  observacoes: "Lugar muito bonito",
+  imagemLocal: "https://exemplo.com/imagem.jpg",
+  cadastradoPor: "Usuário Exemplo",
+  timestamp: Date.now(),
+  publicado: false
+};
+
+axios.post('https://experienceia-default-rtdb.firebaseio.com/locais.json', novoLocal)
+  .then(response => {
+    console.log('Local adicionado com ID:', response.data.name);
+  })
+  .catch(error => {
+    console.error('Erro ao adicionar local:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "name": "-NzKeT6XFoDhTDHxpb9-"
+}
+```
+
+### <h3 align="center">7. Atualizar Local</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/locais/{localId}.json`
+
+**Método:** `PUT`
+
+**Descrição:** Atualiza as informações de um local existente.
+
+**Exemplo de Requisição:**
+
+```javascript
+const localId = "-NzKeT6XFoDhTDHxpb9-"; // ID do local
+const localAtualizado = {
+  local: "Praia Atualizada",
+  latitude: -23.533773,
+  longitude: -46.625290,
+  nivel_de_sujeira: "Alta",
+  ph_da_agua: 6.8,
+  temperatura: 25,
+  potavel: true,
+  observacoes: "Lugar atualizado",
+  imagemLocal: "https://exemplo.com/imagem-atualizada.jpg",
+  cadastradoPor: "Usuário Exemplo",
+  timestamp: Date.now(),
+  publicado: true,
+  editadoEm: new Date().toISOString()
+};
+
+axios.put(`https://experienceia-default-rtdb.firebaseio.com/locais/${localId}.json`, localAtualizado)
+  .then(() => {
+    console.log('Local atualizado com sucesso!');
+  })
+  .catch(error => {
+    console.error('Erro ao atualizar local:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+  "local": "Praia Atualizada",
+  "latitude": -23.533773,
+  "longitude": -46.625290,
+  "nivel_de_sujeira": "Alta",
+  "ph_da_agua": 6.8,
+  "temperatura": 25,
+  "potavel": true,
+  "observacoes": "Lugar atualizado",
+  "imagemLocal": "https://exemplo.com/imagem-atualizada.jpg",
+  "cadastradoPor": "Usuário Exemplo",
+  "timestamp": 1717276631214,
+  "publicado": true,
+  "editadoEm": "2024-06-07T01:29:47.897Z"
+}
+```
+
+### <h3 align="center">8. Deletar Local</h3>
+
+**URL:** `https://experienceia-default-rtdb.firebaseio.com/locais/{localId}.json`
+
+**Método:** `DELETE`
+
+**Descrição:** Remove um local da base de dados.
+
+**Exemplo de Requisição:**
+
+```javascript
+const localId = "-NzKeT6XFoDhTDHxpb9-"; // ID do local
+
+axios.delete(`https://experienceia-default-rtdb.firebaseio.com/locais/${localId}.json`)
+  .then(() => {
+    console.log('Local deletado com sucesso!');
+  })
+  .catch(error => {
+    console.error('Erro ao deletar local:', error);
+  });
+```
+
+**Exemplo de Resposta:**
+
+```json
+null
+```
+
+Essa documentação cobre os principais endpoints utilizados no projeto, com exemplos de como fazer as requisições utilizando `axios`.
