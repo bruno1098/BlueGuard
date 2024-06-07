@@ -172,7 +172,9 @@ O projeto utiliza a estrutura de rotas do **Expo Router** e a configuração de 
 </h1>
  <h2 align="center">🌐 Endpoints da API 🌐</h2>
 
-### <h3 align="center">1. Obter Dados dos Usuários</h3>
+### <h3 align="center">1. Obter Dados dos Usuários (Na prática esse metódo de listar todos não funciona por motivos de segurança, coloquei apenas para visualização) </h3>
+
+## <h3 align="center">(Na prática esse metódo de listar todos não funciona por motivos de segurança, coloquei apenas para visualização) </h3>
 
 **URL:** `https://experienceia-default-rtdb.firebaseio.com/Usuarios.json`
 
