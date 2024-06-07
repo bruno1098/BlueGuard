@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Image, ScrollView, Modal, Alert } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Toast, NativeBaseProvider, Button, Center } from 'native-base';
+import { NativeBaseProvider, Button, Toast } from 'native-base';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
+import { perfilStyles as styles } from './styles/PerfilStyles';
+import ChangePasswordModal from './modals/ChangePasswordModal';
+import LogoutModal from './modals/LogoutModal';
 
 interface Usuario {
   nome: string;
@@ -158,386 +161,70 @@ const Perfil: React.FC = () => {
 
   return (
     <NativeBaseProvider>
-      <ThemedView style={estilos.container}>
-        <View style={estilos.header}>
-          <TouchableOpacity onPress={() => router.back()} style={estilos.backButton}>
+      <ThemedView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Icon name="arrow-back" size={24} color={corTexto} />
           </TouchableOpacity>
-          <ThemedText style={estilos.headerText}>Perfil</ThemedText>
+          <ThemedText style={styles.headerText}>Perfil</ThemedText>
         </View>
-        <ScrollView contentContainerStyle={estilos.scrollViewContent}>
-          <TouchableOpacity style={estilos.avatarContainer} onPress={escolherFoto}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <TouchableOpacity style={styles.avatarContainer} onPress={escolherFoto}>
             {fotoPerfil ? (
-              <Image source={{ uri: fotoPerfil }} style={estilos.avatar} />
+              <Image source={{ uri: fotoPerfil }} style={styles.avatar} />
             ) : (
-              <View style={estilos.avatarPlaceholder}>
+              <View style={styles.avatarPlaceholder}>
                 <MaterialIcons name="person" size={100} color={corTexto} />
-                <MaterialIcons name="add" size={24} color={corTexto} style={estilos.addIcon} />
+                <MaterialIcons name="add" size={24} color={corTexto} style={styles.addIcon} />
               </View>
             )}
           </TouchableOpacity>
-          <View style={estilos.formContainer}>
-            <ThemedText style={estilos.rotulo}>Nome</ThemedText>
+          <View style={styles.formContainer}>
+            <ThemedText style={styles.rotulo}>Nome</ThemedText>
             <TextInput
-              style={[estilos.entrada, { color: corTexto }]}
+              style={[styles.entrada, { color: corTexto }]}
               editable={false}
               value={nome}
             />
-            <ThemedText style={estilos.rotulo}>Email</ThemedText>
+            <ThemedText style={styles.rotulo}>Email</ThemedText>
             <TextInput
-              style={[estilos.entrada, { color: corTexto }]}
+              style={[styles.entrada, { color: corTexto }]}
               editable={false}
               value={email}
               keyboardType="email-address"
             />
-            <ThemedText style={estilos.rotulo}>Idade</ThemedText>
+            <ThemedText style={styles.rotulo}>Idade</ThemedText>
             <TextInput
-              style={[estilos.entrada, { color: corTexto }]}
+              style={[styles.entrada, { color: corTexto }]}
               editable={false}
               value={idade}
               keyboardType="numeric"
             />
-            <TouchableOpacity style={estilos.forgotPasswordButton} onPress={() => setModalVisible(true)}>
-              <ThemedText style={estilos.forgotPasswordText}>Atualizar senha</ThemedText>
+            <TouchableOpacity style={styles.forgotPasswordButton} onPress={() => setModalVisible(true)}>
+              <ThemedText style={styles.forgotPasswordText}>Atualizar senha</ThemedText>
             </TouchableOpacity>
-            <TouchableOpacity style={estilos.logoutButton} onPress={() => setLogoutModalVisible(true)}>
-              <ThemedText style={estilos.logoutText}>Logoff</ThemedText>
+            <TouchableOpacity style={styles.logoutButton} onPress={() => setLogoutModalVisible(true)}>
+              <ThemedText style={styles.logoutText}>Logoff</ThemedText>
             </TouchableOpacity>
           </View>
         </ScrollView>
-        <Modal
+        <ChangePasswordModal
           visible={modalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={estilos.modalContainer}>
-            <View style={[estilos.modalContent, { backgroundColor: useThemeColor({}, 'background') }]}>
-              <ThemedText style={estilos.modalTitle}>Alterar Senha</ThemedText>
-              <ThemedText style={estilos.rotulo}>Senha Antiga</ThemedText>
-              <TextInput
-                style={[estilos.entrada, { color: corTexto }]}
-                secureTextEntry
-                value={senhaAntiga}
-                onChangeText={setSenhaAntiga}
-              />
-              <ThemedText style={estilos.rotulo}>Senha Nova</ThemedText>
-              <TextInput
-                style={[estilos.entrada, { color: corTexto }]}
-                secureTextEntry
-                value={senhaNova}
-                onChangeText={setSenhaNova}
-              />
-              <Button style={estilos.submitButton} onPress={handleChangePassword}>
-                <ThemedText style={estilos.submitButtonText}>Atualizar Senha</ThemedText>
-              </Button>
-              <Button style={estilos.cancelButton} onPress={() => setModalVisible(false)} colorScheme="coolGray">
-                <ThemedText style={estilos.cancelButtonText}>Cancelar</ThemedText>
-              </Button>
-            </View>
-          </View>
-        </Modal>
-        <Modal
+          onClose={() => setModalVisible(false)}
+          senhaAntiga={senhaAntiga}
+          senhaNova={senhaNova}
+          setSenhaAntiga={setSenhaAntiga}
+          setSenhaNova={setSenhaNova}
+          handleChangePassword={handleChangePassword}
+        />
+        <LogoutModal
           visible={logoutModalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={() => setLogoutModalVisible(false)}
-        >
-          <View style={estilos.modalContainer}>
-            <View style={[estilos.modalContent, { backgroundColor: useThemeColor({}, 'background') }]}>
-              <ThemedText style={estilos.modalTitle}>Confirmar Logoff</ThemedText>
-              <ThemedText style={estilos.rotulo}>Você tem certeza que quer sair?</ThemedText>
-              <Button style={estilos.submitButton} onPress={handleLogout} colorScheme="danger">
-                <ThemedText style={estilos.submitButtonText}>Sim</ThemedText>
-              </Button>
-              <Button style={estilos.cancelButton} onPress={() => setLogoutModalVisible(false)} colorScheme="coolGray">
-                <ThemedText style={estilos.cancelButtonText}>Não</ThemedText>
-              </Button>
-            </View>
-          </View>
-        </Modal>
+          onClose={() => setLogoutModalVisible(false)}
+          handleLogout={handleLogout}
+        />
       </ThemedView>
     </NativeBaseProvider>
   );
 };
 
-const estilos = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    alignItems: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    position: 'absolute',
-    top: 30,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 16,
-  },
-  scrollViewContent: {
-    paddingTop: 80,
-    alignItems: 'center',
-    width: '100%',
-  },
-  avatarContainer: {
-    marginBottom: 20,
-    borderRadius: 50,
-    overflow: 'hidden',
-    width: 100,
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-  },
-  avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderRadius: 50,
-    borderColor: '#ccc',
-  },
-  addIcon: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-  },
-  formContainer: {
-    width: '90%',
-  },
-  rotulo: {
-    alignSelf: 'flex-start',
-    marginBottom: 8,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  entrada: {
-    width: 300,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    marginBottom: 16,
-  },
-  forgotPasswordButton: {
-    marginTop: 20,
-    alignSelf: "center"
-  },
-  forgotPasswordText: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-  },
-  logoutButton: {
-    marginTop: 20,
-    alignSelf: "center"
-  },
-  logoutText: {
-    color: '#FF3B30',
-    fontWeight: 'bold',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '90%',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    elevation: 5, // Add shadow for Android
-    shadowColor: '#000', // Add shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Add shadow for iOS
-    shadowOpacity: 0.25, // Add shadow for iOS
-    shadowRadius: 3.84, // Add shadow for iOS
-    backgroundColor: '#fff',
-    transform: [{ scale: 0.9 }],
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  submitButton: {
-    marginTop: 20,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    width: '100%',
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  cancelButton: {
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    width: '100%',
-  },
-  cancelButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-});
-
 export default Perfil;
-
-
-
-
-// const estilos = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//     alignItems: 'center',
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     padding: 16,
-//     position: 'absolute',
-//     top: 30,
-//     left: 0,
-//     right: 0,
-//     zIndex: 1,
-//   },
-//   backButton: {
-//     padding: 8,
-//   },
-//   headerText: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginLeft: 16,
-//   },
-//   scrollViewContent: {
-//     paddingTop: 80,
-//     alignItems: 'center',
-//     width: '100%',
-//   },
-//   avatarContainer: {
-//     marginBottom: 20,
-//     borderRadius: 50,
-//     overflow: 'hidden',
-//     width: 100,
-//     height: 100,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     position: 'relative',
-//   },
-//   avatar: {
-//     width: 100,
-//     height: 100,
-//   },
-//   avatarPlaceholder: {
-//     width: 100,
-//     height: 100,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     borderWidth: 2,
-//     borderRadius: 50,
-//     borderColor: '#ccc',
-//   },
-//   addIcon: {
-//     position: 'absolute',
-//     bottom: 0,
-//     right: 0,
-//     backgroundColor: '#fff',
-//     borderRadius: 12,
-//   },
-//   formContainer: {
-//     width: '90%',
-//   },
-//   rotulo: {
-//     alignSelf: 'flex-start',
-//     marginBottom: 8,
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//   },
-//   entrada: {
-//     width: 300,
-//     height: 40,
-//     borderColor: 'gray',
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     paddingLeft: 10,
-//     marginBottom: 16,
-//   },
-//   forgotPasswordButton: {
-//     marginTop: 20,
-//     alignSelf: "center"
-//   },
-//   forgotPasswordText: {
-//     color: '#007AFF',
-//     fontWeight: 'bold',
-//   },
-//   logoutButton: {
-//     marginTop: 20,
-//     alignSelf: "center"
-//   },
-//   logoutText: {
-//     color: '#FF3B30',
-//     fontWeight: 'bold',
-//   },
-//   modalContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   modalContent: {
-//     width: '90%',
-//     padding: 20,
-//     borderRadius: 10,
-//     alignItems: 'center',
-//   },
-//   modalTitle: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginBottom: 20,
-//   },
-//   submitButton: {
-//     marginTop: 20,
-//     padding: 10,
-//     backgroundColor: '#007AFF',
-//     borderRadius: 5,
-//     alignItems: 'center',
-//   },
-//   submitButtonText: {
-//     color: '#fff',
-//     fontWeight: 'bold',
-//   },
-//   cancelButton: {
-//     marginTop: 10,
-//     padding: 10,
-//     backgroundColor: 'gray',
-//     borderRadius: 5,
-//     alignItems: 'center',
-//   },
-//   cancelButtonText: {
-//     color: '#fff',
-//     fontWeight: 'bold',
-//   },
-// });
-

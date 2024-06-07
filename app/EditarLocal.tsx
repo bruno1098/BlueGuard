@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, Modal, ScrollView, Dimensions, TouchableOpacity, TextInput, Switch, Image } from 'react-native';
+import { View, Alert, Modal, ScrollView, TouchableOpacity, TextInput, Switch, Image } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -9,6 +9,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import { editarLocalStyles as styles } from './styles/editarLocalStyles';
 
 const EditarLocal: React.FC = () => {
   const route = useRoute();
@@ -53,7 +54,7 @@ const EditarLocal: React.FC = () => {
       Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
       return;
     }
-  
+
     const updatedLocal = {
       local,
       latitude,
@@ -65,11 +66,11 @@ const EditarLocal: React.FC = () => {
       observacoes,
       imagemLocal,
       cadastradoPor: user.nome || 'Sistema',
-      publicado: parsedLocation.publicado || true, // Certifique-se de que a propriedade 'publicado' está presente
-      timestamp: parsedLocation.timestamp || new Date().toISOString(), // Manter o timestamp original
-      editadoEm: new Date().toISOString(), // Adicionar o campo de edição
+      publicado: parsedLocation.publicado || true,
+      timestamp: parsedLocation.timestamp || new Date().toISOString(),
+      editadoEm: new Date().toISOString(),
     };
-  
+
     axios.put(`https://experienceia-default-rtdb.firebaseio.com/locais/${parsedLocation.id}.json`, updatedLocal)
       .then(() => {
         Alert.alert('Sucesso', 'Local atualizado com sucesso!');
@@ -80,7 +81,6 @@ const EditarLocal: React.FC = () => {
         Alert.alert('Erro', 'Ocorreu um erro ao atualizar o local.');
       });
   };
-  
 
   const handleMapPress = (event: MapPressEvent) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
@@ -221,125 +221,5 @@ const EditarLocal: React.FC = () => {
     </ThemedView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: 'transparent',
-    position: 'absolute',
-    top: 30,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginLeft: 16,
-  },
-  scrollViewContent: {
-    paddingTop: 80,
-    paddingHorizontal: 16,
-  },
-  card: {
-    padding: 16,
-    marginVertical: 16,
-    borderRadius: 12,
-    elevation: 3,
-  },
-  label: {
-    marginBottom: 8,
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    marginBottom: 16,
-    borderRadius: 8,
-    fontSize: 16,
-  },
-  textArea: {
-    height: 100,
-  },
-  mapButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  mapButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  submitButton: {
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  mapContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  closeButton: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  imageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  imageButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  localImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginTop: 16,
-  },
-});
 
 export default EditarLocal;

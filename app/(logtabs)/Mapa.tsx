@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Dimensions, TextInput, FlatList, TouchableOpacity, Modal, ScrollView, Button, Animated, Keyboard, useColorScheme, Alert } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, Modal, Keyboard, Alert, Animated } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 import { useFocusEffect, useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Menu, Provider } from 'react-native-paper';
+import { MapaStyles as styles } from '../styles/MapaStyles';
+import LocationModal from '../modals/LocationModals';
+import { ColorSchemeName, useColorScheme } from 'react-native';  // Importe ColorSchemeName aqui
 
 interface Location {
   id: string;
@@ -18,7 +21,7 @@ interface Location {
   potavel: boolean;
   observacoes: string;
   cadastradoPor: string;
-  publicado: boolean; // Certifique-se de que esta propriedade está presente
+  publicado: boolean;
 }
 
 const Mapa: React.FC = () => {
@@ -32,7 +35,7 @@ const Mapa: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const router = useRouter();
-  const colorScheme = useColorScheme();
+  const colorScheme: ColorSchemeName = useColorScheme();  
 
   useEffect(() => {
     const obterUsuario = async () => {
@@ -186,7 +189,6 @@ const Mapa: React.FC = () => {
     }
   };
   
-
   return (
     <Provider>
       <View style={styles.container}>
@@ -264,127 +266,19 @@ const Mapa: React.FC = () => {
           animationType="none"
           onRequestClose={handleCloseModal}
         >
-          <View style={styles.modalContainer}>
-            <Animated.View style={[styles.modalContent, { transform: [{ scale: scaleAnim }], backgroundColor: colorScheme === 'dark' ? '#333' : 'white' }]}>
-              <ScrollView contentContainerStyle={styles.modalContentInner}>
-                {selectedLocation && (
-                  <>
-                    <Text style={[styles.modalTitle, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>{selectedLocation.local}</Text>
-                    <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Nível de sujeira: {selectedLocation.nivel_de_sujeira}</Text>
-                    <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>pH da água: {selectedLocation.ph_da_agua}</Text>
-                    <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Temperatura: {selectedLocation.temperatura}°C</Text>
-                    <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Potável: {selectedLocation.potavel ? 'Sim' : 'Não'}</Text>
-                    <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Observações: {selectedLocation.observacoes}</Text>
-                    <Text style={[styles.modalText, { color: colorScheme === 'dark' ? 'white' : 'black', fontSize: 12 }]}>Cadastrado por: {selectedLocation.cadastradoPor || 'Sistema'}</Text>
-                    {selectedLocation.cadastradoPor === user.nome && (
-                      <View style={styles.buttonContainer}>
-                        <Button title="Editar" onPress={handleEdit} />
-                        <Button title="Excluir" onPress={handleDelete} color="red" />
-                      </View>
-                    )}
-                    <Button title="Fechar" onPress={handleCloseModal} />
-                  </>
-                )}
-              </ScrollView>
-            </Animated.View>
-          </View>
+          <LocationModal
+            selectedLocation={selectedLocation}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            handleCloseModal={handleCloseModal}
+            scaleAnim={scaleAnim}
+            colorScheme={colorScheme}
+            user={user}
+          />
         </Modal>
       </View>
     </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  titleContainer: {
-    position: 'absolute',
-    top: 40,
-    left: 10,
-    zIndex: 2,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  searchBarContainer: {
-    position: 'absolute',
-    top: 80, 
-    left: 10,
-    right: 10,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    zIndex: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchBar: {
-    flex: 1,
-  },
-  clearButton: {
-    marginLeft: 10,
-  },
-  suggestions: {
-    position: 'absolute',
-    top: 130, 
-    left: 10,
-    right: 10,
-    backgroundColor: 'white',
-    zIndex: 1,
-    borderRadius: 5,
-    maxHeight: 200,
-  },
-  suggestionItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    width: '80%',
-  },
-  modalContentInner: {
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  menuContainer: {
-    position: 'absolute',
-    top: 40,
-    right: 10,
-    zIndex: 2,
-  },
-  menuButton: {
-    padding: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: 20,
-  },
-});
 
 export default Mapa;

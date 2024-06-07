@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextInput, Button, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TextInput, Button, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -9,6 +9,7 @@ import { Toast, NativeBaseProvider } from 'native-base';
 import Animated, { Easing, useSharedValue, useAnimatedStyle, withTiming, withRepeat, runOnJS } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginStyles as styles } from '../styles/LoginStyles';
 
 interface Usuario {
   nome: string;
@@ -285,32 +286,32 @@ const TelaLogin: React.FC = () => {
       <ParallaxScrollView
         headerBackgroundColor={{ light: '#007BFF', dark: '#004C99' }}
         headerImage={
-          <ThemedView style={estilos.cabecalho}>
+          <ThemedView style={styles.cabecalho}>
             <Animated.Image
               source={require('@/assets/images/logo.png')}
-              style={[estilos.logo, logoStyle]}
+              style={[styles.logo, logoStyle]}
             />
-            <ThemedText style={estilos.titulo}>BlueGuard</ThemedText>
+            <ThemedText style={styles.titulo}>BlueGuard</ThemedText>
           </ThemedView>
         }
       >
-        <View style={estilos.containerCentralizado}>
-          <View style={estilos.perspectiveContainer}>
-            <Animated.View style={[estilos.formContainer, frontStyle]}>
-              <ThemedView style={estilos.formularioContainer}>
-                <ThemedText style={estilos.rotulo}>Email</ThemedText>
+        <View style={styles.containerCentralizado}>
+          <View style={styles.perspectiveContainer}>
+            <Animated.View style={[styles.formContainer, frontStyle]}>
+              <ThemedView style={styles.formularioContainer}>
+                <ThemedText style={styles.rotulo}>Email</ThemedText>
                 <TextInput
-                  style={[estilos.entrada, { color: corTexto }]}
+                  style={[styles.entrada, { color: corTexto }]}
                   placeholder="Digite seu email"
                   placeholderTextColor={corTexto}
                   onChangeText={setLoginEmail}
                   keyboardType="email-address"
                   value={loginEmail}
                 />
-                <ThemedText style={estilos.rotulo}>Senha</ThemedText>
-                <ThemedView style={estilos.containerSenha}>
+                <ThemedText style={styles.rotulo}>Senha</ThemedText>
+                <ThemedView style={styles.containerSenha}>
                   <TextInput
-                    style={[estilos.entradaSenha, { color: corTexto }]}
+                    style={[styles.entradaSenha, { color: corTexto }]}
                     placeholder="Digite sua senha"
                     placeholderTextColor={corTexto}
                     secureTextEntry={!senhaVisivel}
@@ -322,47 +323,47 @@ const TelaLogin: React.FC = () => {
                   </TouchableOpacity>
                 </ThemedView>
                 <Button title={loginStatus === 'success' ? '✔' : loginStatus === 'error' ? '✘' : 'Login'} onPress={lidarComLogin} color={loginStatus === 'success' ? 'green' : loginStatus === 'error' ? 'red' : corTexto} />
-                <TouchableOpacity onPress={alternarFormulario} style={estilos.botaoRegistrar}>
-                  <ThemedText style={estilos.textoRegistrar}>Clique aqui para criar sua conta</ThemedText>
+                <TouchableOpacity onPress={alternarFormulario} style={styles.botaoRegistrar}>
+                  <ThemedText style={styles.textoRegistrar}>Clique aqui para criar sua conta</ThemedText>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={mostrarFormularioReset} style={estilos.botaoRegistrar}>
-                  <ThemedText style={estilos.textoEsquecer}>Esqueceu sua senha?</ThemedText>
+                <TouchableOpacity onPress={mostrarFormularioReset} style={styles.botaoRegistrar}>
+                  <ThemedText style={styles.textoEsquecer}>Esqueceu sua senha?</ThemedText>
                 </TouchableOpacity>
               </ThemedView>
             </Animated.View>
-            <Animated.View style={[estilos.formContainer, backStyle]}>
+            <Animated.View style={[styles.formContainer, backStyle]}>
               {mostrarRegistro ? (
-                <ThemedView style={estilos.formularioContainer}>
-                  <ThemedText style={estilos.rotulo}>Nome</ThemedText>
+                <ThemedView style={styles.formularioContainer}>
+                  <ThemedText style={styles.rotulo}>Nome</ThemedText>
                   <TextInput
-                    style={[estilos.entrada, { color: corTexto }]}
+                    style={[styles.entrada, { color: corTexto }]}
                     placeholder="Digite seu nome"
                     placeholderTextColor={corTexto}
                     onChangeText={setRegistroNome}
                     value={registroNome}
                   />
-                  <ThemedText style={estilos.rotulo}>Idade</ThemedText>
+                  <ThemedText style={styles.rotulo}>Idade</ThemedText>
                   <TextInput
-                    style={[estilos.entrada, { color: corTexto }]}
+                    style={[styles.entrada, { color: corTexto }]}
                     placeholder="Digite sua idade"
                     placeholderTextColor={corTexto}
                     onChangeText={setRegistroIdade}
                     keyboardType="numeric"
                     value={registroIdade}
                   />
-                  <ThemedText style={estilos.rotulo}>Email</ThemedText>
+                  <ThemedText style={styles.rotulo}>Email</ThemedText>
                   <TextInput
-                    style={[estilos.entrada, { color: corTexto }]}
+                    style={[styles.entrada, { color: corTexto }]}
                     placeholder="Digite seu email"
                     placeholderTextColor={corTexto}
                     onChangeText={setRegistroEmail}
                     keyboardType="email-address"
                     value={registroEmail}
                   />
-                  <ThemedText style={estilos.rotulo}>Senha</ThemedText>
-                  <ThemedView style={estilos.containerSenha}>
+                  <ThemedText style={styles.rotulo}>Senha</ThemedText>
+                  <ThemedView style={styles.containerSenha}>
                     <TextInput
-                      style={[estilos.entradaSenha, { color: corTexto }]}
+                      style={[styles.entradaSenha, { color: corTexto }]}
                       placeholder="Digite sua senha"
                       placeholderTextColor={corTexto}
                       secureTextEntry={!senhaVisivel}
@@ -374,25 +375,25 @@ const TelaLogin: React.FC = () => {
                     </TouchableOpacity>
                   </ThemedView>
                   <Button title={registroStatus === 'success' ? '✔' : registroStatus === 'error' ? '✘' : 'Registrar'} onPress={lidarComRegistro} color={registroStatus === 'success' ? 'green' : registroStatus === 'error' ? 'red' : corTexto} />
-                  <TouchableOpacity onPress={alternarFormulario} style={estilos.botaoRegistrar}>
-                    <ThemedText style={estilos.textoRegistrar}>Voltar</ThemedText>
+                  <TouchableOpacity onPress={alternarFormulario} style={styles.botaoRegistrar}>
+                    <ThemedText style={styles.textoRegistrar}>Voltar</ThemedText>
                   </TouchableOpacity>
                 </ThemedView>
               ) : (
-                <ThemedView style={estilos.formularioContainer}>
-                  <ThemedText style={estilos.rotulo}>Email</ThemedText>
+                <ThemedView style={styles.formularioContainer}>
+                  <ThemedText style={styles.rotulo}>Email</ThemedText>
                   <TextInput
-                    style={[estilos.entrada, { color: corTexto }]}
+                    style={[styles.entrada, { color: corTexto }]}
                     placeholder="Digite seu email"
                     placeholderTextColor={corTexto}
                     onChangeText={setResetEmail}
                     keyboardType="email-address"
                     value={resetEmail}
                   />
-                  <ThemedText style={estilos.rotulo}>Nova Senha</ThemedText>
-                  <ThemedView style={estilos.containerSenha}>
+                  <ThemedText style={styles.rotulo}>Nova Senha</ThemedText>
+                  <ThemedView style={styles.containerSenha}>
                     <TextInput
-                      style={[estilos.entradaSenha, { color: corTexto }]}
+                      style={[styles.entradaSenha, { color: corTexto }]}
                       placeholder="Digite sua nova senha"
                       placeholderTextColor={corTexto}
                       secureTextEntry={!senhaVisivel}
@@ -404,8 +405,8 @@ const TelaLogin: React.FC = () => {
                     </TouchableOpacity>
                   </ThemedView>
                   <Button title={resetStatus === 'success' ? '✔' : resetStatus === 'error' ? '✘' : 'Redefinir Senha'} onPress={lidarComReset} color={resetStatus === 'success' ? 'green' : resetStatus === 'error' ? 'red' : corTexto} />
-                  <TouchableOpacity onPress={alternarFormulario} style={estilos.botaoRegistrar}>
-                    <ThemedText style={estilos.textoRegistrar}>Voltar</ThemedText>
+                  <TouchableOpacity onPress={alternarFormulario} style={styles.botaoRegistrar}>
+                    <ThemedText style={styles.textoRegistrar}>Voltar</ThemedText>
                   </TouchableOpacity>
                 </ThemedView>
               )}
@@ -416,93 +417,5 @@ const TelaLogin: React.FC = () => {
     </NativeBaseProvider>
   );
 };
-
-const estilos = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  cabecalho: {
-    height: 350,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 130,
-    height: 110,
-    marginBottom: 20,
-  },
-  titulo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  formularioContainer: {
-    padding: 20,
-    alignItems: 'center',
-    width: '100%',
-    backfaceVisibility: 'hidden',
-  },
-  rotulo: {
-    alignSelf: 'flex-start',
-    marginBottom: 5,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  entrada: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    marginBottom: 10,
-  },
-  containerSenha: {
-    width: '100%',
-    height: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  entradaSenha: {
-    flex: 1,
-    paddingLeft: 10,
-  },
-  botaoRegistrar: {
-    marginTop: 10,
-  },
-  textoRegistrar: {
-    color: '#007BFF',
-  },
-  textoEsquecer: {
-    color: '#FF3B30',
-  },
-  formContainer: {
-    backfaceVisibility: 'hidden',
-    width: '100%',
-    position: 'absolute',
-    top: 0,
-    alignItems: 'center',
-  },
-  perspectiveContainer: {
-    width: '100%',
-    height: 400,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  containerCentralizado: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  
-});
 
 export default TelaLogin;

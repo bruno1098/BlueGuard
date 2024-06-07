@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, Image, Dimensions, RefreshControl, Text, useColorScheme } from 'react-native';
+import { View, ScrollView, RefreshControl, Text } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import axios from 'axios';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, interpolate, Easing } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import { useFocusEffect } from '@react-navigation/native';
+import { ComunidadeStyles as styles } from '../styles/ComunidadeStyles';
+import LocalCard from '../Card/LocalCards'
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 interface Usuario {
   nome: string;
@@ -106,24 +108,11 @@ const Comunidade: React.FC = () => {
     titleScale.value = withTiming(offsetY > 50 ? 0.8 : 1, { duration: 500, easing: Easing.out(Easing.exp) });
   };
 
-  const formatTimestamp = (timestamp: string, editadoEm?: string) => {
-    const date = new Date(timestamp);
-    const formattedDate = date.toLocaleString();
-    if (editadoEm) {
-      return `${formattedDate} (editado)`;
-    }
-    return formattedDate;
-  };
-
-  const isRemoteUrl = (url: string) => {
-    return url.startsWith('http://') || url.startsWith('https://');
-  };
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemedView style={styles.container}>
         <Animated.View style={[styles.titleContainer, titleAnimatedStyle]}>
-          <Text style={[styles.title, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Comunidade 👥</Text>
+          <Text style={[styles.title, { color: colorScheme === 'dark' ? 'black' : 'white' }]}>Comunidade 👥</Text>
         </Animated.View>
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}
@@ -132,101 +121,18 @@ const Comunidade: React.FC = () => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
           {locais.map((local) => (
-            <View key={local.id} style={[styles.card, { backgroundColor }]}>
-              <View style={styles.header}>
-                {usuarios[local.cadastradoPor]?.fotoPerfil && isRemoteUrl(usuarios[local.cadastradoPor]?.fotoPerfil as string) ? (
-                  <Image
-                    source={{ uri: usuarios[local.cadastradoPor]?.fotoPerfil as string }}
-                    style={styles.avatar}
-                  />
-                ) : (
-                  <View style={styles.avatarPlaceholder} />
-                )}
-                <View>
-                  <ThemedText style={[styles.nome, { color: textColor }]}>{usuarios[local.cadastradoPor]?.nome || local.cadastradoPor}</ThemedText>
-                  <ThemedText style={[styles.timestamp, { color: textColor }]}>{formatTimestamp(local.timestamp, local.editadoEm)}</ThemedText>
-                </View>
-              </View>
-              <Image source={{ uri: local.imagemLocal }} style={styles.imagem} />
-              <ThemedText style={[styles.local, { color: textColor }]}>{local.local}</ThemedText>
-              <ThemedText style={[styles.observacoes, { color: textColor }]}>{local.observacoes}</ThemedText>
-            </View>
+            <LocalCard
+              key={local.id}
+              local={local}
+              usuario={usuarios[local.cadastradoPor]}
+              backgroundColor={backgroundColor}
+              textColor={textColor}
+            />
           ))}
         </ScrollView>
       </ThemedView>
     </GestureHandlerRootView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  titleContainer: {
-    position: 'absolute',
-    top: 40,
-    left: 10,
-    zIndex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  scrollViewContent: {
-    paddingTop: 100,  // espaço para o título
-    paddingBottom: 16,
-  },
-  card: {
-    padding: 16,
-    marginBottom: 16,
-    borderRadius: 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12,
-  },
-  avatarPlaceholder: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12,
-    backgroundColor: '#ccc',
-  },
-  nome: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  timestamp: {
-    fontSize: 14,
-    color: '#666',
-  },
-  imagem: {
-    width: '100%',
-    height: Dimensions.get('window').width * 0.75,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  local: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  observacoes: {
-    fontSize: 16,
-  },
-});
 
 export default Comunidade;

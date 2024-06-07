@@ -1,15 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, Modal, ScrollView, Dimensions, TouchableOpacity, TextInput, Switch, Image } from 'react-native';
+import { View, Alert, ScrollView, TouchableOpacity, TextInput, Switch, Image } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import axios from 'axios';
-import MapView, { Marker, MapPressEvent } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import { CadastroStyles as styles } from './styles/CadastroStyles'
+import MapModal from './modals/MapModal';
+import PublicarModal from './PublicarModal';
+import { MapPressEvent } from 'react-native-maps';
 
 const Cadastro: React.FC = () => {
   const [local, setLocal] = useState('');
@@ -80,7 +82,6 @@ const Cadastro: React.FC = () => {
         Alert.alert('Erro', 'Ocorreu um erro ao cadastrar o local.');
       });
   };
-
 
   const resetForm = () => {
     setLocal('');
@@ -233,188 +234,22 @@ const Cadastro: React.FC = () => {
           </TouchableOpacity>
         </ThemedView>
 
-        <Modal visible={mapVisible} transparent={true} animationType="slide">
-          <View style={styles.mapContainer}>
-            <MapView
-              style={styles.map}
-              onPress={handleMapPress}
-            >
-              {latitude && longitude && (
-                <Marker coordinate={{ latitude, longitude }} />
-              )}
-            </MapView>
-            <TouchableOpacity onPress={() => setMapVisible(false)} style={[styles.closeButton, { backgroundColor: primaryColor }]}>
-              <ThemedText style={styles.closeButtonText}>Fechar</ThemedText>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+        <MapModal
+          visible={mapVisible}
+          onClose={() => setMapVisible(false)}
+          onMapPress={handleMapPress}
+          latitude={latitude}
+          longitude={longitude}
+        />
 
-        <Modal visible={publicarModalVisible} transparent={true} animationType="slide">
-          <ThemedView style={[styles.modalContainer, { backgroundColor: backgroundColor }]}>
-            <ThemedView style={styles.modalContent}>
-              <ThemedText style={styles.modalTitle}>Publicar na Comunidade?</ThemedText>
-              <TouchableOpacity style={styles.modalButton} onPress={() => handlePublicar(true)}>
-                <ThemedText style={styles.modalButtonText}>Sim</ThemedText>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.modalButton, { backgroundColor: 'gray' }]} onPress={() => handlePublicar(false)}>
-                <ThemedText style={styles.modalButtonText}>Não</ThemedText>
-              </TouchableOpacity>
-            </ThemedView>
-          </ThemedView>
-        </Modal>
+        <PublicarModal
+          visible={publicarModalVisible}
+          onClose={handlePublicar}
+          backgroundColor={backgroundColor}
+        />
       </ScrollView>
     </ThemedView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: 'transparent',
-    position: 'absolute',
-    top: 30,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginLeft: 16,
-  },
-  scrollViewContent: {
-    paddingTop: 80,
-    paddingHorizontal: 16,
-  },
-  card: {
-    padding: 16,
-    marginVertical: 16,
-    borderRadius: 12,
-    elevation: 3,
-  },
-  label: {
-    marginBottom: 8,
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    marginBottom: 16,
-    borderRadius: 8,
-    fontSize: 16,
-  },
-  textArea: {
-    height: 100,
-  },
-  mapButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  mapButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  submitButton: {
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  mapContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  closeButton: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  imageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  imageButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  localImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginTop: 16,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: 'black',
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  modalButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#007AFF',
-    borderRadius: 5,
-    alignItems: 'center',
-    width: '100%',
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-});
 
 export default Cadastro;
