@@ -12,6 +12,16 @@
  
 <p style="text-align: justify;"> <strong>BlueGuard</strong> é um aplicativo inovador desenvolvido em <strong>React Native</strong> utilizando <strong>Expo</strong>, desenvolvido para mapear locais com informações ambientais de maneira eficiente. O aplicativo permite que os usuários registrem e visualizem dados detalhados sobre a qualidade da água, temperatura e outros aspectos ambientais relevantes. Além disso, os usuários podem adicionar novas informações e compartilhar esses dados com a comunidade, incentivando a conscientização e a proteção do meio ambiente. Com BlueGuard, torna-se mais fácil monitorar e preservar nossos recursos naturais.</p>
 
+<h2 align="center">👥 Integrantes do Projeto 👥</h2>
+
+<div align="center">
+  <p><strong>Bruno Antunes</strong> - RM98470</p>
+  <p><strong>Gabriel Figueiredo</strong> - RM99463</p>
+  <p><strong>Gabriel Souza</strong> - RM98633</p>
+  <p><strong>Pedro Ferrari</strong> - RM550231</p>
+  <p><strong>Rafael Lino</strong> - RM551577</p>
+</div>
+
 <h2 align="center">Tecnologias Utilizadas</h2>
 <p align="center">
   <img src="https://img.shields.io/badge/-React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React Native" />
@@ -38,10 +48,24 @@
   - `_layout.tsx`: Configuração de layout principal.
   - `index.tsx`: Tela principal de entrada.
   - `Login.tsx`: Tela de login e registro de usuários.
-  - `Cadastro.tsx`: Tela para cadastro de novos locais.
-  - `Perfil.tsx`: Tela de perfil do usuário.
+
+- **Card**
+  - `LocalCards.tsx`: Componente para exibição dos cartões de locais.
+
+- **modals**
+  - `ChangePasswordModal.tsx`: Modal para alteração de senha.
+  - `LocationModals.tsx`: Modal para exibição de detalhes do local.
+  - `LogoutModal.tsx`: Modal para confirmação de logout.
+  - `MapModal.tsx`: Modal para seleção de localização no mapa.
+
+- **styles**
+  - `_layout.tsx`: Estilos para layout.
   - `+html.tsx`: Componente HTML.
   - `+not-found.tsx`: Tela padrão para rotas não encontradas.
+  - `Cadastro.tsx`: Tela para cadastro de novos locais.
+  - `EditarLocal.tsx`: Tela para edição de locais cadastrados.
+  - `Perfil.tsx`: Tela de perfil do usuário.
+  - `PublicarModal.tsx`: Modal para confirmação de publicação de locais.
 
 #### 🖼️ **assets**
 
@@ -78,7 +102,6 @@ Hooks personalizados para temas e outras funcionalidades.
 - **Parallax Scroll View**: Utiliza o componente ParallaxScrollView para uma apresentação visual atraente, com uma imagem de cabeçalho e seções informativas.
 - **Informações Educativas**: Exibe seções com textos educativos sobre a importância da conservação marinha, desafios atuais, soluções propostas pelo BlueGuard e o impacto das Áreas Marinhas Protegidas (AMPs).
 - **Imagens Ilustrativas**: Inclui imagens relacionadas aos tópicos abordados para maior impacto visual e engajamento.
-- **Botão "Saiba Mais"**: Um botão interativo para que os usuários possam explorar mais sobre o aplicativo e suas funcionalidades.
 
 ### 🌍 **Mapa**
 
