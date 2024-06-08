@@ -33,6 +33,17 @@
   <img src="https://img.shields.io/badge/-MacBook-000000?style=for-the-badge&logo=apple&logoColor=white" alt="MacBook" />
 </p>
 
+<h2 align="center">🎥 Demonstração do Aplicativo 🎥</h2>
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=zJTUvL5StFQ">
+    <img src="https://img.youtube.com/vi/zJTUvL5StFQ/0.jpg" alt="Demonstração do BlueGuard" style="width: 80%; height: auto; border-radius: 10px;"/>
+  </a>
+  <p style="text-align: justify;">
+    Clique na imagem e assista ao vídeo para ver o BlueGuard em ação! No vídeo, demonstramos como é fácil registrar um novo local, visualizar informações detalhadas no mapa, explorar a comunidade de locais cadastrados e gerenciar o perfil do usuário.
+  </p>
+</div>
+
 <h2 align="center"> 📁 Estrutura do Projeto</h2>
 
 <h3 align="center">🌟 Diretórios e Arquivos Principais 🌟</h3>
